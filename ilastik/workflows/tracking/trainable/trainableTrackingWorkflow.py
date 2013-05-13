@@ -1,37 +1,61 @@
 from lazyflow.graph import Graph
 
 from ilastik.workflow import Workflow
-from ilastik.workflows.tracking.manual.manualTrackingWorkflow import ManualTrackingWorkflow
-
+from ilastik.applets.dataSelection import DataSelectionApplet
+from ilastik.applets.tracking.manual.manualTrackingApplet import ManualTrackingApplet
+from ilastik.applets.objectExtraction.objectExtractionApplet import ObjectExtractionApplet
 
 class TrainableTrackingWorkflow( Workflow ):
-    workflowName = "Tracking (trainable)"
+    workflowName = "Tracking Workflow (trainable)"
 
     @property
-    def applets( self ):
-        return self._manual_wf.applets
-
+    def applets(self):
+        return self._applets
+    
     @property
-    def imageNameListSlot( self ):
-        return self._manual_wf.imageNameListSlot
+    def imageNameListSlot(self):
+        return self.dataSelectionApplet.topLevelOperator.ImageName
 
-    def __init__( self, headless, *args, **kwargs ):
+    def __init__( self, *args, **kwargs ):
         graph = kwargs['graph'] if 'graph' in kwargs else Graph()
         if 'graph' in kwargs: del kwargs['graph']
-        super(TrainableTrackingWorkflow, self).__init__(headless=headless, graph=graph, *args, **kwargs)
-
-        self._manual_wf = ManualTrackingWorkflow( headless, *args, **kwargs )
-
+        super(TrainableTrackingWorkflow, self).__init__(graph=graph, *args, **kwargs)
         
-
-    def connectLane( self, laneIndex ):
-        self._manual_wf.connectLane( laneIndex )
-
-
-    
-
-
+        ## Create applets 
+        self.dataSelectionApplet = DataSelectionApplet(self, 
+                                                       "Input Data", 
+                                                       "Input Data", 
+                                                       batchDataGui=False,
+                                                       force5d=True)
+        opSegDataSelection = self.dataSelectionApplet.topLevelOperator
+        opSegDataSelection.DatasetRoles.setValue( ['Raw Data', 'Binary Segmentation'] )        
+                                                                   
+        self.objectExtractionApplet = ObjectExtractionApplet(workflow=self,
+                                                                      name="Object Extraction")
         
+        self.trackingApplet = ManualTrackingApplet( workflow=self )
+        
+        self._applets = []        
+        self._applets.append(self.dataSelectionApplet)        
+        self._applets.append(self.objectExtractionApplet)        
+        self._applets.append(self.trackingApplet)
+            
+    def connectLane(self, laneIndex):
+        opData = self.dataSelectionApplet.topLevelOperator.getLane(laneIndex)
+        opObjExtraction = self.objectExtractionApplet.topLevelOperator.getLane(laneIndex)            
+        opTracking = self.trackingApplet.topLevelOperator.getLane(laneIndex)
+                
+        ## Connect operators ##
+        rawSlot = opData.ImageGroup[0]
+        segSlot = opData.ImageGroup[1]
+        opObjExtraction.RawImage.connect( rawSlot )
+        opObjExtraction.BinaryImage.connect( segSlot )    
+        
+        opTracking.RawImage.connect( rawSlot )
+        opTracking.LabelImage.connect( opObjExtraction.LabelImage )
+        opTracking.BinaryImage.connect( segSlot )        
+        opTracking.ObjectFeatures.connect( opObjExtraction.RegionFeatures )
+
         
 
 

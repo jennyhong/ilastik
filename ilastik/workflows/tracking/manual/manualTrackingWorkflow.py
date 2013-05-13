@@ -5,7 +5,7 @@ from ilastik.applets.tracking.manual.manualTrackingApplet import ManualTrackingA
 from ilastik.applets.objectExtraction.objectExtractionApplet import ObjectExtractionApplet
 
 class ManualTrackingWorkflow( Workflow ):
-    workflowName = "Tracking Workflow (Manual)"
+    workflowName = "Tracking Workflow (manual)"
     workflowDescription = "Manual tracking of objects."
 
     @property
