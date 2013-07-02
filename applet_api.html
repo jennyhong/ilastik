@@ -10,8 +10,8 @@
     
     <title>Applet API &mdash; ilastik 0.6.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -22,9 +22,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="ilastik 0.6.0 documentation" href="index.html" />
     <link rel="next" title="Applet Library" href="applet_library.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
@@ -84,12 +84,12 @@ Instead of manipulating the top-level operator directly, most GUIs manipulate a 
 operator for a particular image lane.</p>
 <p>For example, consider this top-level operator diagram (the <cite>Workflow Design</cite> page explains how to interpret operator diagrams).</p>
 <div class="figure">
-<a class="reference internal image-reference" href="_images/DeviationFromMean-Top-Level-Operator.svg"><img alt="Deviation-From-Mean Top-Level Operator" src="_images/DeviationFromMean-Top-Level-Operator.svg" /></a>
+<a class="reference internal image-reference" href="images/DeviationFromMean-Top-Level-Operator.svg"><img alt="Deviation-From-Mean Top-Level Operator" src="images/DeviationFromMean-Top-Level-Operator.svg" /></a>
 </div>
 <p>If the Applet GUI is only interested in dealing with a single image (say, the second one), it can be written to use a <em>view</em>.
 In that case, the GUI is provided with an object that looks like this:</p>
 <div class="figure">
-<a class="reference internal image-reference" href="_images/DeviationFromMean-View.svg"><img alt="Deviation-From-Mean Top-Level Operator (View)" src="_images/DeviationFromMean-View.svg" /></a>
+<a class="reference internal image-reference" href="images/DeviationFromMean-View.svg"><img alt="Deviation-From-Mean Top-Level Operator (View)" src="images/DeviationFromMean-View.svg" /></a>
 </div>
 <p>Notice that the view object has no multi-slots. As far as the GUI is concerned, there is only one image lane.
 (The dotted lines are just shown for comparison with the previous diagram.  Click on the diagram and zoom in for better rendering.)</p>
@@ -99,11 +99,11 @@ In that case, the GUI is provided with an object that looks like this:</p>
 <h2>The Workflow Base Class<a class="headerlink" href="#the-workflow-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ilastik.workflow.Workflow">
-<em class="property">class </em><tt class="descclassname">ilastik.workflow.</tt><tt class="descname">Workflow</tt><big>(</big><em>headless=False</em>, <em>workflow_cmdline_args=()</em>, <em>parent=None</em>, <em>graph=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/workflow.html#Workflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.workflow.</tt><tt class="descname">Workflow</tt><big>(</big><em>headless=False</em>, <em>workflow_cmdline_args=()</em>, <em>parent=None</em>, <em>graph=None</em><big>)</big><a class="reference internal" href="modules/ilastik/workflow.html#Workflow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all workflows.</p>
 <dl class="method">
 <dt id="ilastik.workflow.Workflow.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>headless=False</em>, <em>workflow_cmdline_args=()</em>, <em>parent=None</em>, <em>graph=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/workflow.html#Workflow.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>headless=False</em>, <em>workflow_cmdline_args=()</em>, <em>parent=None</em>, <em>graph=None</em><big>)</big><a class="reference internal" href="modules/ilastik/workflow.html#Workflow.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor.  Subclasses MUST call this in their own <tt class="docutils literal"><span class="pre">__init__</span></tt> functions.
 The parent and graph parameters will be passed directly to the Operator base class. If both are None,
 a new Graph is instantiated internally.</p>
@@ -127,13 +127,13 @@ the workflow from the command line</li>
 
 <dl class="attribute">
 <dt id="ilastik.workflow.Workflow.applets">
-<tt class="descname">applets</tt><a class="reference internal" href="_modules/ilastik/workflow.html#Workflow.applets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.applets" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">applets</tt><a class="reference internal" href="modules/ilastik/workflow.html#Workflow.applets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.applets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract property. Return the list of applets that are owned by this workflow.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ilastik.workflow.Workflow.imageNameListSlot">
-<tt class="descname">imageNameListSlot</tt><a class="reference internal" href="_modules/ilastik/workflow.html#Workflow.imageNameListSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.imageNameListSlot" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">imageNameListSlot</tt><a class="reference internal" href="modules/ilastik/workflow.html#Workflow.imageNameListSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.imageNameListSlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract property.  Return the &#8220;image name list&#8221; slot, which lists the names of 
 all image lanes (i.e. files) currently loaded by the workflow.
 This slot is typically provided by the DataSelection applet via its ImageName slot.</p>
@@ -141,7 +141,7 @@ This slot is typically provided by the DataSelection applet via its ImageName sl
 
 <dl class="method">
 <dt id="ilastik.workflow.Workflow.connectLane">
-<tt class="descname">connectLane</tt><big>(</big><em>laneIndex</em><big>)</big><a class="reference internal" href="_modules/ilastik/workflow.html#Workflow.connectLane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.connectLane" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">connectLane</tt><big>(</big><em>laneIndex</em><big>)</big><a class="reference internal" href="modules/ilastik/workflow.html#Workflow.connectLane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.connectLane" title="Permalink to this definition">¶</a></dt>
 <dd><p>When a new image lane has been added to the workflow, this workflow base class does the following:</p>
 <ol class="arabic simple">
 <li>Create room for the new image lane by adding a lane to each applet&#8217;s topLevelOperator</li>
@@ -158,7 +158,7 @@ Extra workflow initialization be done here.</p>
 
 <dl class="method">
 <dt id="ilastik.workflow.Workflow.cleanUp">
-<tt class="descname">cleanUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/workflow.html#Workflow.cleanUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.cleanUp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cleanUp</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/workflow.html#Workflow.cleanUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.workflow.Workflow.cleanUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>The user closed the project, so this workflow is being destroyed.  
 Tell the applet GUIs to stop processing data, and free any resources that are owned by this workflow or its applets.</p>
 </dd></dl>
@@ -181,13 +181,13 @@ The base class provides a few signals, which applets can use to communicate with
 <h2>Applet Base Class<a class="headerlink" href="#applet-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ilastik.applets.base.applet.Applet">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.applet.</tt><tt class="descname">Applet</tt><big>(</big><em>name</em>, <em>syncWithImageIndex=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#Applet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.applet.</tt><tt class="descname">Applet</tt><big>(</big><em>name</em>, <em>syncWithImageIndex=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/applet.html#Applet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all applets.  The shell and workflow depend on this interface only.
 Applets can subclass from this class directly, but in most cases it is easier to 
 subclass <a class="reference internal" href="#ilastik.applets.base.standardApplet.StandardApplet" title="ilastik.applets.base.standardApplet.StandardApplet"><tt class="xref py py-class docutils literal"><span class="pre">StandardApplet</span></tt></a>.</p>
 <dl class="method">
 <dt id="ilastik.applets.base.applet.Applet.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>syncWithImageIndex=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#Applet.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>syncWithImageIndex=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/applet.html#Applet.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor.
 Subclasses must call this base implementation in their own <tt class="docutils literal"><span class="pre">__init__</span></tt> methods.
 If they fail to do so, the shell raises an exception.</p>
@@ -239,7 +239,7 @@ Example invocation: <tt class="docutils literal"><span class="pre">self.shellReq
 
 <dl class="attribute">
 <dt id="ilastik.applets.base.applet.Applet.topLevelOperator">
-<tt class="descname">topLevelOperator</tt><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#Applet.topLevelOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.topLevelOperator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">topLevelOperator</tt><a class="reference internal" href="modules/ilastik/applets/base/applet.html#Applet.topLevelOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.topLevelOperator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract property.
 The applet&#8217;s Top Level Operator, which is a single operator for all computation performed by the applet.
 Each applet has exactly one top-level operator for performing computations.
@@ -248,14 +248,14 @@ Workflow managers can connect the top-level operator of one applet to others.</p
 
 <dl class="method">
 <dt id="ilastik.applets.base.applet.Applet.getMultiLaneGui">
-<tt class="descname">getMultiLaneGui</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#Applet.getMultiLaneGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.getMultiLaneGui" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getMultiLaneGui</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/applet.html#Applet.getMultiLaneGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.getMultiLaneGui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.
 Provides the applet&#8217;s GUI, which must be an instance of <a class="reference internal" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface" title="ilastik.applets.base.appletGuiInterface.AppletGuiInterface"><tt class="xref py py-class docutils literal"><span class="pre">AppletGuiInterface</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ilastik.applets.base.applet.Applet.dataSerializers">
-<tt class="descname">dataSerializers</tt><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#Applet.dataSerializers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.dataSerializers" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">dataSerializers</tt><a class="reference internal" href="modules/ilastik/applets/base/applet.html#Applet.dataSerializers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.Applet.dataSerializers" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of dataSerializer objects for loading/saving any project data the applet is responsible for.
 Each serializer must be an instance of <a class="reference internal" href="#ilastik.applets.base.appletSerializer.AppletSerializer" title="ilastik.applets.base.appletSerializer.AppletSerializer"><tt class="xref py py-class docutils literal"><span class="pre">AppletSerializer</span></tt></a>
 Subclasses should override this property.  By default, returns [].</p>
@@ -265,7 +265,7 @@ Subclasses should override this property.  By default, returns [].</p>
 
 <dl class="class">
 <dt id="ilastik.applets.base.applet.ControlCommand">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.applet.</tt><tt class="descname">ControlCommand</tt><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#ControlCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.ControlCommand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.applet.</tt><tt class="descname">ControlCommand</tt><a class="reference internal" href="modules/ilastik/applets/base/applet.html#ControlCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.ControlCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class enumerates the GUI control commands that applets can ask the shell to perform via <a class="reference internal" href="#ilastik.applets.base.applet.Applet.guiControlSignal" title="ilastik.applets.base.applet.Applet.guiControlSignal"><tt class="xref py py-attr docutils literal"><span class="pre">Applet.guiControlSignal</span></tt></a>.
 Gui control commands are used to prevent the user from altering upstream or downstream applet settings while an applet is performing some long-running task.</p>
 <dl class="attribute">
@@ -302,7 +302,7 @@ Gui control commands are used to prevent the user from altering upstream or down
 
 <dl class="class">
 <dt id="ilastik.applets.base.applet.ShellRequest">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.applet.</tt><tt class="descname">ShellRequest</tt><a class="reference internal" href="_modules/ilastik/applets/base/applet.html#ShellRequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.ShellRequest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.applet.</tt><tt class="descname">ShellRequest</tt><a class="reference internal" href="modules/ilastik/applets/base/applet.html#ShellRequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.applet.ShellRequest" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class enumerates the actions that applets can ask the shell to perform via <a class="reference internal" href="#ilastik.applets.base.applet.Applet.shellRequestSignal" title="ilastik.applets.base.applet.Applet.shellRequestSignal"><tt class="xref py py-attr docutils literal"><span class="pre">Applet.shellRequestSignal</span></tt></a>.
 At the moment, there is only one supported action.</p>
 <dl class="attribute">
@@ -318,7 +318,7 @@ At the moment, there is only one supported action.</p>
 <h2>StandardApplet Base Class<a class="headerlink" href="#standardapplet-base-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.standardApplet.</tt><tt class="descname">StandardApplet</tt><big>(</big><em>name</em>, <em>workflow=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.standardApplet.</tt><tt class="descname">StandardApplet</tt><big>(</big><em>name</em>, <em>workflow=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet" title="Permalink to this definition">¶</a></dt>
 <dd><p>In most cases, it is easiest to use StandardApplet as a base class for your custom applet.
 StandardApplets are designed to simplify two tasks for most use-cases: Creating a <em>top-level operator</em> and creating a GUI.</p>
 <p>StandardApplet subclasses may expose their <em>top-level operator</em> in one of two ways:</p>
@@ -334,7 +334,7 @@ StandardApplets are designed to simplify two tasks for most use-cases: Creating 
 </ol>
 <dl class="method">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>workflow=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>workflow=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -352,7 +352,7 @@ StandardApplets are designed to simplify two tasks for most use-cases: Creating 
 
 <dl class="attribute">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.singleLaneOperatorClass">
-<tt class="descname">singleLaneOperatorClass</tt><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.singleLaneOperatorClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.singleLaneOperatorClass" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">singleLaneOperatorClass</tt><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.singleLaneOperatorClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.singleLaneOperatorClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the operator class which handles a single image.
 Single-lane applets should override this property.
 (Multi-lane applets must override <tt class="docutils literal"><span class="pre">topLevelOperator</span></tt> directly.)</p>
@@ -360,7 +360,7 @@ Single-lane applets should override this property.
 
 <dl class="attribute">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.broadcastingSlots">
-<tt class="descname">broadcastingSlots</tt><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.broadcastingSlots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.broadcastingSlots" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">broadcastingSlots</tt><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.broadcastingSlots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.broadcastingSlots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Slots that should be connected to all image lanes are referred to as &#8220;broadcasting&#8221; slots.
 Single-lane applets should override this property to return a list of the broadcasting slots&#8217; names.
 (Multi-lane applets must override <tt class="docutils literal"><span class="pre">topLevelOperator</span></tt> directly.)</p>
@@ -368,7 +368,7 @@ Single-lane applets should override this property to return a list of the broadc
 
 <dl class="attribute">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.topLevelOperator">
-<tt class="descname">topLevelOperator</tt><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.topLevelOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.topLevelOperator" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">topLevelOperator</tt><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.topLevelOperator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.topLevelOperator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the top-level (multi-image-lane) operator for the applet.
 This default implementation uses <tt class="docutils literal"><span class="pre">singleLaneOperatorClass</span></tt> 
 and <tt class="docutils literal"><span class="pre">broadcastingSlots</span></tt> to generate the top-level operator.
@@ -378,14 +378,14 @@ Note that the top-level operator must adhere to the <tt class="docutils literal"
 
 <dl class="attribute">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.singleLaneGuiClass">
-<tt class="descname">singleLaneGuiClass</tt><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.singleLaneGuiClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.singleLaneGuiClass" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">singleLaneGuiClass</tt><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.singleLaneGuiClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.singleLaneGuiClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the class that will be instantiated for each image lane the applet needs.
 The class constructor should accept a single parameter: a single-lane of the top-level operator.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.createSingleLaneGui">
-<tt class="descname">createSingleLaneGui</tt><big>(</big><em>imageLaneIndex</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.createSingleLaneGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.createSingleLaneGui" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">createSingleLaneGui</tt><big>(</big><em>imageLaneIndex</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.createSingleLaneGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.createSingleLaneGui" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function is called to create new instances of single-lane applet GUIs.
 If your applet&#8217;s single-lane GUI requires special constructor arguments, then override this method.
 Otherwise, this default implementation generates instances of your <tt class="docutils literal"><span class="pre">singleLaneGuiClass</span></tt>.</p>
@@ -393,7 +393,7 @@ Otherwise, this default implementation generates instances of your <tt class="do
 
 <dl class="method">
 <dt id="ilastik.applets.base.standardApplet.StandardApplet.getMultiLaneGui">
-<tt class="descname">getMultiLaneGui</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/standardApplet.html#StandardApplet.getMultiLaneGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.getMultiLaneGui" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getMultiLaneGui</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/standardApplet.html#StandardApplet.getMultiLaneGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.standardApplet.StandardApplet.getMultiLaneGui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override from Applet base class.</p>
 </dd></dl>
 
@@ -472,39 +472,39 @@ Here&#8217;s an example timeline, showing a typical sequence of interactions.</p
 <p>An applet&#8217;s GUI object is responsible for providing the widgets that the shell displays when this applet is selected by the user.</p>
 <p>Here&#8217;s a screenshot of the ilastik-shell gui:</p>
 <div class="figure">
-<a class="reference internal image-reference" href="_images/ilastik-shell.png"><img alt="ilastik-shell screenshot" src="_images/ilastik-shell.png" style="width: 1027.0px; height: 784.0px;" /></a>
+<a class="reference internal image-reference" href="images/ilastik-shell.png"><img alt="ilastik-shell screenshot" src="images/ilastik-shell.png" style="width: 1027.0px; height: 784.0px;" /></a>
 </div>
 <p>In the following figure, the areas of the GUI are labeled according to the terminology used in the ilastik code base:</p>
 <div class="figure">
-<a class="reference internal image-reference" href="_images/ilastik-shell-gui-areas.png"><img alt="ilastik-shell screenshot" src="_images/ilastik-shell-gui-areas.png" style="width: 1027.0px; height: 784.0px;" /></a>
+<a class="reference internal image-reference" href="images/ilastik-shell-gui-areas.png"><img alt="ilastik-shell screenshot" src="images/ilastik-shell-gui-areas.png" style="width: 1027.0px; height: 784.0px;" /></a>
 </div>
 <p>An applet GUI is responsible for providing the widgets for each of the areas labeled above except for the &#8220;Current Image Menu&#8221;, which is
 created by the shell.  Additionally, Applet GUIs provide any menu items that should be shown when an applet is being viewed by the user.</p>
 <dl class="class">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletGuiInterface.</tt><tt class="descname">AppletGuiInterface</tt><big>(</big><em>topLevelOperatorView</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletGuiInterface.</tt><tt class="descname">AppletGuiInterface</tt><big>(</big><em>topLevelOperatorView</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the abstract interface to which all applet GUI classes should adhere.</p>
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.centralWidget">
-<tt class="descname">centralWidget</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.centralWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.centralWidget" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">centralWidget</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.centralWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.centralWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.  Return the widget that will be displayed in the main viewer area.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.appletDrawer">
-<tt class="descname">appletDrawer</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.appletDrawer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.appletDrawer" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">appletDrawer</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.appletDrawer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.appletDrawer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.  Return the drawer widget for this applet.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.menus">
-<tt class="descname">menus</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.menus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.menus" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">menus</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.menus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.menus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.  Return a list of QMenu widgets to be shown in the menu bar when this applet is visible.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.viewerControlWidget">
-<tt class="descname">viewerControlWidget</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.viewerControlWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.viewerControlWidget" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">viewerControlWidget</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.viewerControlWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.viewerControlWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.
 Return the widget that controls how the content of the central widget is displayed.
 Typically this consists of a layer list control.</p>
@@ -512,7 +512,7 @@ Typically this consists of a layer list control.</p>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.setImageIndex">
-<tt class="descname">setImageIndex</tt><big>(</big><em>imageIndex</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.setImageIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.setImageIndex" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setImageIndex</tt><big>(</big><em>imageIndex</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.setImageIndex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.setImageIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.
 Called by the shell when the user has switched the input image he wants to view.
 The GUI should respond by updating the content of the central widget.
@@ -521,7 +521,7 @@ Note: Single-image GUIs do not need to provide this function.</p>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.laneAdded">
-<tt class="descname">laneAdded</tt><big>(</big><em>laneIndex</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.laneAdded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.laneAdded" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">laneAdded</tt><big>(</big><em>laneIndex</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.laneAdded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.laneAdded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.
 Called when a new image lane has been added to the workflow, and the GUI should respond appropriately.
 Note: The default GUI provided by StandardApplet overrides this for you.</p>
@@ -529,7 +529,7 @@ Note: The default GUI provided by StandardApplet overrides this for you.</p>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.laneRemoved">
-<tt class="descname">laneRemoved</tt><big>(</big><em>laneIndex</em>, <em>finalLength</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.laneRemoved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.laneRemoved" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">laneRemoved</tt><big>(</big><em>laneIndex</em>, <em>finalLength</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.laneRemoved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.laneRemoved" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.
 Called when a new image lane is about to be removed from the workflow, and the GUI should respond appropriately.
 The GUI should clean up any resourecs it owns.
@@ -538,7 +538,7 @@ Note: The default GUI provided by StandardApplet overrides this for you.</p>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletGuiInterface.AppletGuiInterface.stopAndCleanUp">
-<tt class="descname">stopAndCleanUp</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.stopAndCleanUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.stopAndCleanUp" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">stopAndCleanUp</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletGuiInterface.html#AppletGuiInterface.stopAndCleanUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletGuiInterface.AppletGuiInterface.stopAndCleanUp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method.
 Called when the GUI is about to be destroyed.
 The gui should stop updating all data views and should clean up any resources it created (e.g. orphan operators).</p>
@@ -551,25 +551,25 @@ The gui should stop updating all data views and should clean up any resources it
 <h2>Applet Serializers<a class="headerlink" href="#applet-serializers" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">AppletSerializer</tt><big>(</big><em>topGroupName</em>, <em>slots=None</em>, <em>operator=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">AppletSerializer</tt><big>(</big><em>topGroupName</em>, <em>slots=None</em>, <em>operator=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all AppletSerializers.</p>
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer._serializeToHdf5">
-<tt class="descname">_serializeToHdf5</tt><big>(</big><em>topGroup</em>, <em>hdf5File</em>, <em>projectFilePath</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer._serializeToHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer._serializeToHdf5" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">_serializeToHdf5</tt><big>(</big><em>topGroup</em>, <em>hdf5File</em>, <em>projectFilePath</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer._serializeToHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer._serializeToHdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Child classes should override this function, if
 necessary.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer._deserializeFromHdf5">
-<tt class="descname">_deserializeFromHdf5</tt><big>(</big><em>topGroup</em>, <em>groupVersion</em>, <em>hdf5File</em>, <em>projectFilePath</em>, <em>headless=False</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer._deserializeFromHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer._deserializeFromHdf5" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">_deserializeFromHdf5</tt><big>(</big><em>topGroup</em>, <em>groupVersion</em>, <em>hdf5File</em>, <em>projectFilePath</em>, <em>headless=False</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer._deserializeFromHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer._deserializeFromHdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Child classes should override this function, if
 necessary.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.isDirty">
-<tt class="descname">isDirty</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.isDirty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.isDirty" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">isDirty</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.isDirty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.isDirty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns true if the current state of this item (in memory)
 does not match the state of the HDF5 group on disk.</p>
 <p>Subclasses only need override this method if ORing the flags
@@ -578,7 +578,7 @@ is not enough.</p>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.unload">
-<tt class="descname">unload</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.unload" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">unload</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.unload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called if either</p>
 <ol class="arabic simple">
 <li>the user closed the project or</li>
@@ -592,7 +592,7 @@ project.</p>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.progressIncrement">
-<tt class="descname">progressIncrement</tt><big>(</big><em>group=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.progressIncrement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.progressIncrement" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">progressIncrement</tt><big>(</big><em>group=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.progressIncrement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.progressIncrement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the percentage progress for each slot.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -608,7 +608,7 @@ slot.shouldSerialize(group).</td>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.serializeToHdf5">
-<tt class="descname">serializeToHdf5</tt><big>(</big><em>hdf5File</em>, <em>projectFilePath</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.serializeToHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.serializeToHdf5" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">serializeToHdf5</tt><big>(</big><em>hdf5File</em>, <em>projectFilePath</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.serializeToHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.serializeToHdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serialize the current applet state to the given hdf5 file.</p>
 <p>Subclasses should <strong>not</strong> override this method. Instead,
 subclasses override the &#8216;private&#8217; version, <em>_serializetoHdf5</em></p>
@@ -630,7 +630,7 @@ which should already be open</li>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.deserializeFromHdf5">
-<tt class="descname">deserializeFromHdf5</tt><big>(</big><em>hdf5File</em>, <em>projectFilePath</em>, <em>headless=False</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.deserializeFromHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.deserializeFromHdf5" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">deserializeFromHdf5</tt><big>(</big><em>hdf5File</em>, <em>projectFilePath</em>, <em>headless=False</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.deserializeFromHdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.deserializeFromHdf5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the the current applet state from the given hdf5File
 handle, which should already be open.</p>
 <p>Subclasses should <strong>not</strong> override this method. Instead,
@@ -656,20 +656,20 @@ which should already be open</li>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.repairFile">
-<tt class="descname">repairFile</tt><big>(</big><em>path</em>, <em>filt=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.repairFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.repairFile" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">repairFile</tt><big>(</big><em>path</em>, <em>filt=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.repairFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.repairFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>get new path to lost file</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.initWithoutTopGroup">
-<tt class="descname">initWithoutTopGroup</tt><big>(</big><em>hdf5File</em>, <em>projectFilePath</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.initWithoutTopGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.initWithoutTopGroup" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">initWithoutTopGroup</tt><big>(</big><em>hdf5File</em>, <em>projectFilePath</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.initWithoutTopGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.initWithoutTopGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optional override for subclasses. Called when there is no
 top group to deserialize.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.AppletSerializer.updateWorkingDirectory">
-<tt class="descname">updateWorkingDirectory</tt><big>(</big><em>newdir</em>, <em>olddir</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.updateWorkingDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.updateWorkingDirectory" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">updateWorkingDirectory</tt><big>(</big><em>newdir</em>, <em>olddir</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#AppletSerializer.updateWorkingDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.AppletSerializer.updateWorkingDirectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optional override for subclasses. Called when the
 working directory is changed and relative paths have
 to be updated. Child Classes should overwrite this method
@@ -683,11 +683,11 @@ if they store relative paths.</p>
 <h2>Serializable Slots<a class="headerlink" href="#serializable-slots" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialSlot</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialSlot</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements the logic for serializing a slot.</p>
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -725,7 +725,7 @@ can be serialized. If None, defaults to [].</li>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot._serialize">
-<tt class="descname">_serialize</tt><big>(</big><em>group</em>, <em>name</em>, <em>slot</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot._serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot._serialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">_serialize</tt><big>(</big><em>group</em>, <em>name</em>, <em>slot</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot._serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot._serialize" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -743,7 +743,7 @@ can be serialized. If None, defaults to [].</li>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot._deserialize">
-<tt class="descname">_deserialize</tt><big>(</big><em>subgroup</em>, <em>slot</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot._deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot._deserialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">_deserialize</tt><big>(</big><em>subgroup</em>, <em>slot</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot._deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot._deserialize" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -756,13 +756,13 @@ can be serialized. If None, defaults to [].</li>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot.shouldSerialize">
-<tt class="descname">shouldSerialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot.shouldSerialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.shouldSerialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shouldSerialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot.shouldSerialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.shouldSerialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether to serialize or not.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot.serialize">
-<tt class="descname">serialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot.serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.serialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">serialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot.serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs tasks common to all serializations, like changing
 dirty status.</p>
 <p>Do not override (unless for some reason this function does not
@@ -781,7 +781,7 @@ group.</td>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot.deserialize">
-<tt class="descname">deserialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.deserialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">deserialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.deserialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs tasks common to all deserializations.</p>
 <p>Do not override (unless for some reason this function does not
 do the right thing in your case). Instead override
@@ -799,7 +799,7 @@ group.</td>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialSlot.unload">
-<tt class="descname">unload</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialSlot.unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.unload" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">unload</tt><big>(</big><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialSlot.unload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialSlot.unload" title="Permalink to this definition">¶</a></dt>
 <dd><p>see AppletSerializer.unload()</p>
 </dd></dl>
 
@@ -807,7 +807,7 @@ group.</td>
 
 <dl class="class">
 <dt id="ilastik.applets.base.appletSerializer.SerialListSlot">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialListSlot</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em>, <em>transform=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialListSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialListSlot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialListSlot</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em>, <em>transform=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialListSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialListSlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>As the name implies: used for serializing a list.</p>
 <p>The only differences from the base class are:</p>
 <ul class="simple">
@@ -817,7 +817,7 @@ group.</td>
 </ul>
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialListSlot.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em>, <em>transform=None</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialListSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialListSlot.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em>, <em>transform=None</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialListSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialListSlot.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -832,11 +832,11 @@ group.</td>
 
 <dl class="class">
 <dt id="ilastik.applets.base.appletSerializer.SerialBlockSlot">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialBlockSlot</tt><big>(</big><em>slot</em>, <em>inslot</em>, <em>blockslot</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialBlockSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialBlockSlot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialBlockSlot</tt><big>(</big><em>slot</em>, <em>inslot</em>, <em>blockslot</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialBlockSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialBlockSlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>A slot which only saves nonzero blocks.</p>
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialBlockSlot.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>inslot</em>, <em>blockslot</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialBlockSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialBlockSlot.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>inslot</em>, <em>blockslot</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialBlockSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialBlockSlot.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -851,26 +851,26 @@ group.</td>
 
 <dl class="class">
 <dt id="ilastik.applets.base.appletSerializer.SerialClassifierSlot">
-<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialClassifierSlot</tt><big>(</big><em>slot</em>, <em>cache</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.applets.base.appletSerializer.</tt><tt class="descname">SerialClassifierSlot</tt><big>(</big><em>slot</em>, <em>cache</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot" title="Permalink to this definition">¶</a></dt>
 <dd><p>For saving a random forest classifier.</p>
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialClassifierSlot.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>cache</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>slot</em>, <em>cache</em>, <em>inslot=None</em>, <em>name=None</em>, <em>subname=None</em>, <em>default=None</em>, <em>depends=None</em>, <em>selfdepends=True</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialClassifierSlot._serialize">
-<tt class="descname">_serialize</tt><big>(</big><em>group</em>, <em>name</em>, <em>slot</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot._serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot._serialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">_serialize</tt><big>(</big><em>group</em>, <em>name</em>, <em>slot</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot._serialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot._serialize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialClassifierSlot._deserialize">
-<tt class="descname">_deserialize</tt><big>(</big><em>classifierGroup</em>, <em>slot</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot._deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot._deserialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">_deserialize</tt><big>(</big><em>classifierGroup</em>, <em>slot</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot._deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot._deserialize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ilastik.applets.base.appletSerializer.SerialClassifierSlot.deserialize">
-<tt class="descname">deserialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="_modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot.deserialize" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">deserialize</tt><big>(</big><em>group</em><big>)</big><a class="reference internal" href="modules/ilastik/applets/base/appletSerializer.html#SerialClassifierSlot.deserialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.applets.base.appletSerializer.SerialClassifierSlot.deserialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Have to override this to ensure that dirty is always set False.</p>
 </dd></dl>
 
@@ -932,7 +932,7 @@ It is intended to be used as a base class for almost all user-defined applets.</
                         title="next chapter">Applet Library</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/applet_api.txt"
+    <li><a href="sources/applet_api.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

@@ -10,8 +10,8 @@
     
     <title>Plugin System &mdash; ilastik 0.6.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -22,9 +22,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="ilastik 0.6.0 documentation" href="index.html" />
     <link rel="prev" title="Appendix: Testing Ilastik" href="testing.html" /> 
   </head>
@@ -59,11 +59,11 @@ file <cite>~/.ilastikrc</cite> which is handled in <cite>ilastik.config</cite>.<
 feature plugins.</p>
 <dl class="class">
 <dt id="ilastik.plugins.ObjectFeaturesPlugin">
-<em class="property">class </em><tt class="descclassname">ilastik.plugins.</tt><tt class="descname">ObjectFeaturesPlugin</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ilastik/plugins.html#ObjectFeaturesPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">ilastik.plugins.</tt><tt class="descname">ObjectFeaturesPlugin</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="modules/ilastik/plugins.html#ObjectFeaturesPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plugins of this class calculate object features.</p>
 <dl class="method">
 <dt id="ilastik.plugins.ObjectFeaturesPlugin.availableFeatures">
-<tt class="descname">availableFeatures</tt><big>(</big><em>image</em>, <em>labels</em><big>)</big><a class="reference internal" href="_modules/ilastik/plugins.html#ObjectFeaturesPlugin.availableFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.availableFeatures" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">availableFeatures</tt><big>(</big><em>image</em>, <em>labels</em><big>)</big><a class="reference internal" href="modules/ilastik/plugins.html#ObjectFeaturesPlugin.availableFeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.availableFeatures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reports which features this plugin can compute on a
 particular image and label image.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -86,7 +86,7 @@ dictionary of parameters.</p>
 
 <dl class="method">
 <dt id="ilastik.plugins.ObjectFeaturesPlugin.compute_global">
-<tt class="descname">compute_global</tt><big>(</big><em>image</em>, <em>labels</em>, <em>features</em>, <em>axes</em><big>)</big><a class="reference internal" href="_modules/ilastik/plugins.html#ObjectFeaturesPlugin.compute_global"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.compute_global" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">compute_global</tt><big>(</big><em>image</em>, <em>labels</em>, <em>features</em>, <em>axes</em><big>)</big><a class="reference internal" href="modules/ilastik/plugins.html#ObjectFeaturesPlugin.compute_global"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.compute_global" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculate the requested features.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -111,7 +111,7 @@ shape[0] == number of objects</p>
 
 <dl class="method">
 <dt id="ilastik.plugins.ObjectFeaturesPlugin.compute_local">
-<tt class="descname">compute_local</tt><big>(</big><em>image</em>, <em>binary_bbox</em>, <em>features</em>, <em>axes</em><big>)</big><a class="reference internal" href="_modules/ilastik/plugins.html#ObjectFeaturesPlugin.compute_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.compute_local" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">compute_local</tt><big>(</big><em>image</em>, <em>binary_bbox</em>, <em>features</em>, <em>axes</em><big>)</big><a class="reference internal" href="modules/ilastik/plugins.html#ObjectFeaturesPlugin.compute_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.compute_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate features on a single object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -135,7 +135,7 @@ dict[feature_name] is a numpy.ndarray with ndim=1</p>
 
 <dl class="method">
 <dt id="ilastik.plugins.ObjectFeaturesPlugin.do_channels">
-<tt class="descname">do_channels</tt><big>(</big><em>fn</em>, <em>image</em>, <em>axes</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ilastik/plugins.html#ObjectFeaturesPlugin.do_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.do_channels" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">do_channels</tt><big>(</big><em>fn</em>, <em>image</em>, <em>axes</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="modules/ilastik/plugins.html#ObjectFeaturesPlugin.do_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ilastik.plugins.ObjectFeaturesPlugin.do_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper for features that only take one channel.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -162,7 +162,7 @@ dict[feature_name] is a numpy.ndarray with ndim=1</p>
                         title="previous chapter">Appendix: Testing Ilastik</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/pluginSystem.txt"
+    <li><a href="sources/pluginSystem.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
