@@ -180,5 +180,3 @@ if parsed_args.headless:
 else:
     from ilastik.shell.gui.startShellGui import startShellGui
     sys.exit(startShellGui(workflow_cmdline_args, parsed_args.start_recording, *init_funcs))
-
-# This is a test
