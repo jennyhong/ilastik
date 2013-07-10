@@ -11,13 +11,21 @@ class OpGraphCuts(Operator):
     category = "Pointwise"
 
     InputImage = InputSlot()
-    LabelInputs = InputSlot(optional = True)
-    FeatureImages = InputSlot()
+    Labels = InputSlot()
 
+    Output = OutputSlot()
     PredictionProbabilities = OutputSlot()
 
     def __init__(self, *args, **kwargs):
-        self.opTrain = OpObjectTrain(parent=self)
+        req_image = self.InputImage[:]
+        req_image.submit()
+        self.image = req_image.wait()
+        
+        req_labels = self.Labels[:]
+        req_labels.submit()
+        self.labels = req_labels.wait()
+        
+        self.opTrain = OpObjectTrain(image=self.image, labels=self.labels)
 
     def setupOutputs(self):
         pass
@@ -25,16 +33,16 @@ class OpGraphCuts(Operator):
     def execute(self, slot, subindex, roi, result):
         key = roi.toSlice()
         raw = self.InputImage[key].wait()
-        mask = numpy.logical_and(self.MinValue.value <= raw, raw <= self.MaxValue.value)
         
+        if slot.name == 'PredictionProbabilities':
+            result[...] = raw
         if slot.name == 'Output':
-            result[...] = mask * raw
-        if slot.name == 'InvertedOutput':
-            result[...] = numpy.logical_not(mask) * raw
+            result[...] = raw
 
     def propagateDirty(self, slot, subindex, roi):
         if slot.name == "InputImage":
             self.PredictionProbabilities.setDirty(roi)
+            self.Output.setDirty(roi)
         else:
             assert False, "Unknown dirty input slot"
 
@@ -47,10 +55,12 @@ class OpGraphCutsGMMTrain(Operator):
     description = "Trains a Gaussian Mixture Model on all labeled pixels in an image."
     category = "Learning"
 
-    Labels = InputSlot()
-    Features = InputSlot()
-
     Classifier = OutputSlot()
+
+    def __init__(self, *args, **kwargs):
+        self.image = kwargs.pop('image', None)
+        self.labels = kwargs.pop('labels', None)
+        assert len(kwargs) == 0, "OpGraphCutsGMMTrain received an unknown parameter"
 
     def execute(self, slot, subindex, roi, result):
         featList = []
