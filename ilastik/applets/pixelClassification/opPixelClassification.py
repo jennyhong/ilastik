@@ -166,12 +166,12 @@ class OpPixelClassification( Operator ):
     def setupCaches(self, imageIndex):
         numImages = len(self.InputImages)
         inputSlot = self.InputImages[imageIndex]
-#        # Can't setup if all inputs haven't been set yet.
-#        if numImages != len(self.FeatureImages) or \
-#           numImages != len(self.CachedFeatureImages):
-#            return
-#        
-#        self.LabelImages.resize(numImages)
+        # # Can't setup if all inputs haven't been set yet.
+        # if numImages != len(self.FeatureImages) or \
+        #   numImages != len(self.CachedFeatureImages):
+        #    return
+
+        # self.LabelImages.resize(numImages)
         self.LabelInputs.resize(numImages)
 
         # Special case: We have to set up the shape of our label *input* according to our image input shape
