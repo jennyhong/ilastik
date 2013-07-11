@@ -13,7 +13,7 @@ from lazyflow.utility import Tracer
 
 from ilastik.utility import bind
 
-class GraphCutsGui(LayerViewerGui):
+class GraphCutsGui(LabelingGui):
     """
     """
     
@@ -35,6 +35,41 @@ class GraphCutsGui(LayerViewerGui):
         with Tracer(traceLogger):
             self.topLevelOperatorView = topLevelOperatorView
             super(GraphCutsGui, self).__init__(self.topLevelOperatorView)
+
+        # Tell our base class which slots to monitor
+        labelSlots = LabelingGui.LabelingSlots()
+        labelSlots.labelInput = topLevelOperatorView.LabelInputs
+        labelSlots.labelOutput = topLevelOperatorView.LabelImages
+        labelSlots.labelEraserValue = topLevelOperatorView.opLabelPipeline.opLabelArray.eraser
+        labelSlots.labelDelete = topLevelOperatorView.opLabelPipeline.opLabelArray.deleteLabel
+
+        # Base class init
+        super(PixelClassificationGui, self).__init__( labelSlots, topLevelOperatorView, labelingDrawerUiPath )
+        
+        self.topLevelOperatorView = topLevelOperatorView
+        self.interactiveModeActive = False
+        self._currentlySavingPredictions = False
+
+        self.labelingDrawerUi.savePredictionsButton.clicked.connect(self.onSavePredictionsButtonClicked)
+        self.labelingDrawerUi.savePredictionsButton.setIcon( QIcon(ilastikIcons.Save) )
+        
+        self.labelingDrawerUi.liveUpdateButton.setEnabled(False)
+        self.labelingDrawerUi.liveUpdateButton.setIcon( QIcon(ilastikIcons.Play) )
+        self.labelingDrawerUi.liveUpdateButton.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.labelingDrawerUi.liveUpdateButton.toggled.connect( self.toggleInteractive )
+
+        self.topLevelOperatorView.MaxLabelValue.notifyDirty( bind(self.handleLabelSelectionChange) )
+        
+        self._initShortcuts()
+
+        try:
+            self.render = True
+            self._renderedLayers = {} # (layer name, label number)
+            self._renderMgr = RenderingManager(
+                renderer=self.editor.view3d.qvtk.renderer,
+                qvtk=self.editor.view3d.qvtk)
+        except:
+            self.render = False
             
     def initAppletDrawerUi(self):
         with Tracer(traceLogger):
@@ -74,48 +109,103 @@ class GraphCutsGui(LayerViewerGui):
         return self._drawer
     
     def setupLayers(self):
-        with Tracer(traceLogger):
-            layers = []
-    
-            # Show the thresholded data
-            outputImageSlot = self.topLevelOperatorView.Output
-            if outputImageSlot.ready():
-                outputLayer = self.createStandardLayerFromSlot( outputImageSlot )
-                outputLayer.name = "min <= x <= max"
-                outputLayer.visible = True
-                outputLayer.opacity = 0.75
-                layers.append(outputLayer)
-            
-            # Show the  data
-            invertedOutputSlot = self.topLevelOperatorView.InvertedOutput
-            if invertedOutputSlot.ready():
-                invertedLayer = self.createStandardLayerFromSlot( invertedOutputSlot )
-                invertedLayer.name = "(x < min) U (x > max)"
-                invertedLayer.visible = True
-                invertedLayer.opacity = 0.25
-                layers.append(invertedLayer)
-            
-            # Show the raw input data
-            inputImageSlot = self.topLevelOperatorView.InputImage
-            if inputImageSlot.ready():
-                inputLayer = self.createStandardLayerFromSlot( inputImageSlot )
-                inputLayer.name = "Raw Input"
-                inputLayer.visible = True
-                inputLayer.opacity = 1.0
-                layers.append(inputLayer)
-    
-            return layers
+        """
+        Called by our base class when one of our data slots has changed.
+        This function creates a layer for each slot we want displayed in the volume editor.
+        """
+        # Base class provides the label layer.
+        layers = super(PixelClassificationGui, self).setupLayers()
+        labels = self.labelListData
 
+        # Add each of the segmentations
+        for channel, segmentationSlot in enumerate(self.topLevelOperatorView.SegmentationChannels):
+            if segmentationSlot.ready() and channel < len(labels):
+                ref_label = labels[channel]
+                segsrc = LazyflowSource(segmentationSlot)
+                segLayer = AlphaModulatedLayer( segsrc,
+                                                tintColor=ref_label.pmapColor(),
+                                                range=(0.0, 1.0),
+                                                normalize=(0.0, 1.0) )
 
+                segLayer.opacity = 1
+                segLayer.visible = self.labelingDrawerUi.liveUpdateButton.isChecked()
+                segLayer.visibleChanged.connect(self.updateShowSegmentationCheckbox)
 
+                def setLayerColor(c, segLayer=segLayer):
+                    segLayer.tintColor = c
+                    self._update_rendering()
 
+                def setSegLayerName(n, segLayer=segLayer):
+                    oldname = segLayer.name
+                    newName = "Segmentation (%s)" % n
+                    segLayer.name = newName
+                    if not self.render:
+                        return
+                    if oldname in self._renderedLayers:
+                        label = self._renderedLayers.pop(oldname)
+                        self._renderedLayers[newName] = label
 
+                setSegLayerName(ref_label.name)
 
+                ref_label.pmapColorChanged.connect(setLayerColor)
+                ref_label.nameChanged.connect(setSegLayerName)
+                #check if layer is 3d before adding the "Toggle 3D" option
+                #this check is done this way to match the VolumeRenderer, in
+                #case different 3d-axistags should be rendered like t-x-y
+                #_axiskeys = segmentationSlot.meta.getAxisKeys()
+                if len(segmentationSlot.meta.shape) == 4:
+                    #the Renderer will cut out the last shape-dimension, so
+                    #we're checking for 4 dimensions
+                    self._setup_contexts(segLayer)
+                layers.append(segLayer)
+        
+        # Add each of the predictions
+        for channel, predictionSlot in enumerate(self.topLevelOperatorView.PredictionProbabilityChannels):
+            if predictionSlot.ready() and channel < len(labels):
+                ref_label = labels[channel]
+                predictsrc = LazyflowSource(predictionSlot)
+                predictLayer = AlphaModulatedLayer( predictsrc,
+                                                    tintColor=ref_label.pmapColor(),
+                                                    range=(0.0, 1.0),
+                                                    normalize=(0.0, 1.0) )
+                predictLayer.opacity = 0.25
+                predictLayer.visible = self.labelingDrawerUi.liveUpdateButton.isChecked()
+                predictLayer.visibleChanged.connect(self.updateShowPredictionCheckbox)
 
+                def setLayerColor(c, predictLayer=predictLayer):
+                    predictLayer.tintColor = c
 
+                def setPredLayerName(n, predictLayer=predictLayer):
+                    newName = "Prediction for %s" % n
+                    predictLayer.name = newName
 
+                setPredLayerName(ref_label.name)
+                ref_label.pmapColorChanged.connect(setLayerColor)
+                ref_label.nameChanged.connect(setPredLayerName)
+                layers.append(predictLayer)
 
+        # Add the raw data last (on the bottom)
+        inputDataSlot = self.topLevelOperatorView.InputImages
+        if inputDataSlot.ready():
+            inputLayer = self.createStandardLayerFromSlot( inputDataSlot )
+            inputLayer.name = "Input Data"
+            inputLayer.visible = True
+            inputLayer.opacity = 1.0
 
+            def toggleTopToBottom():
+                index = self.layerstack.layerIndex( inputLayer )
+                self.layerstack.selectRow( index )
+                if index == 0:
+                    self.layerstack.moveSelectedToBottom()
+                else:
+                    self.layerstack.moveSelectedToTop()
 
-
-
+            inputLayer.shortcutRegistration = (
+                "Prediction Layers",
+                "Bring Input To Top/Bottom",
+                QShortcut( QKeySequence("i"), self.viewerControlWidget(), toggleTopToBottom),
+                inputLayer )
+            layers.append(inputLayer)
+        
+        self.handleLabelSelectionChange()
+        return layers
