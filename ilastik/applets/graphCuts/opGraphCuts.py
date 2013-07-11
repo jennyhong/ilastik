@@ -126,6 +126,16 @@ class OpPredictGraphCutsGMM(Operator):
     LabelsCount = InputSlot(stype='integer')
     PMaps = OutputSlot()
 
+    """
+    Taken from OpPredictRandomForest, not sure if applicable here
+    """
+    def setupOutputs(self):
+        nlabels=self.inputs["LabelsCount"].value
+        self.PMaps.meta.dtype = numpy.float32
+        self.PMaps.meta.axistags = copy.copy(self.Image.meta.axistags)
+        self.PMaps.meta.shape = self.Image.meta.shape[:-1]+(nlabels,) # FIXME: This assumes that channel is the last axis
+        self.PMaps.meta.drange = (0.0, 1.0)
+
     def execute(self, slot, subindex, roi, result):
         key = roi.toSlice()
         nlabels = self.LabelsCount.value
@@ -154,3 +164,22 @@ class OpPredictGraphCutsGMM(Operator):
 
         result[:] = predictions
         return result
+
+    def propagateDirty(self, slot, subindex, roi):
+        key = roi.toSlice()
+        if slot.name == "Classifier":
+            logger.debug("OpPredictGraphCutsGMM: Classifier changed, setting dirty")
+            if self.LabelsCount.ready() and self.LabelsCount.value > 0:
+                self.PMaps.setDirty(slice(None,None,None))
+        elif slot.name == "Image":
+            nlabels = self.LabelsCount.value
+            if nlabels > 0:
+                self.PMaps.setDirty(key[:-1] + (slice(0,nlabels,None),))
+        elif slot.name == "LabelsCount":
+            # When the labels count changes, we must resize the output
+            if self.configured():
+                # FIXME: It's ugly that we call the 'private' _setupOutputs() function here,
+                #  but the output shape needs to change when this input becomes dirty,
+                #  and the output change needs to be propagated to the rest of the graph.
+                self._setupOutputs()
+            self.PMaps.setDirty(slice(None,None,None))
