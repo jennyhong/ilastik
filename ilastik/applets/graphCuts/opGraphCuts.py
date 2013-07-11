@@ -8,6 +8,7 @@ traceLogger = logging.getLogger("TRACE." + __name__)
 # additional modules to install
 import sklearn.mixture
 import numpy
+import pygco
 
 class OpGraphCuts(Operator):
     name = "OpGraphCuts"
@@ -28,19 +29,32 @@ class OpGraphCuts(Operator):
         req_labels.submit()
         self.labels = req_labels.wait()
         
-        self.opTrain = OpObjectTrain(image=self.image, labels=self.labels)
+        self.opTrain = OpGraphCutsGMMTrain(image=self.image, labels=self.labels)
+        self.opPredict = OpPredictGraphCutsGMM()
+
+        self.opTrain.Image.connect( self.Image )
+        self.opTrain.Labels.connect( self.Labels )
+        self.opPredict.Classifier.connect( self.opTrain.Classifier )
+        self.PredictionProbabilities.connect( self.opPredict.PMaps )
 
     def setupOutputs(self):
         pass
     
+    def _simple_vh(self):
+        unaries = np.array(self.PredictionProbabilities, dtype=np.int32)
+        pairwise = -2 * np.eye(len(self.labels), dtype=np.int32)
+        vertical = np.ones((unaries.shape[0], unaries.shape[1]), dtype=np.int32)
+        horizontal = np.ones((unaries.shape[0], unaries.shape[1]), dtype=np.int32)
+        return pygco.cut_simple_vh(unaries, pairwise, vertical, horizontal)
+
     def execute(self, slot, subindex, roi, result):
-        key = roi.toSlice()
-        raw = self.InputImage[key].wait()
+        # key = roi.toSlice()
+        # raw = self.InputImage[key].wait()
         
         if slot.name == 'PredictionProbabilities':
-            result[...] = raw
+            result[...] = self.PredictionProbabilities
         if slot.name == 'Output':
-            result[...] = raw
+            result[...] = self._simple_vh()
 
     def propagateDirty(self, slot, subindex, roi):
         if slot.name == "InputImage":
