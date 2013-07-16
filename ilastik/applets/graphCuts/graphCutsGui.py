@@ -1,17 +1,35 @@
-from PyQt4.QtGui import *
-from PyQt4 import uic
-
+# Built-in
 import os
-
-from ilastik.applets.layerViewer.layerViewerGui import LayerViewerGui
-from volumina.widgets.thresholdingWidget import ThresholdingWidget
-
 import logging
+import threading
+from functools import partial
+
+# Third-party
+import numpy
+from PyQt4 import uic
+from PyQt4.QtCore import Qt, pyqtSlot
+from PyQt4.QtGui import QMessageBox, QColor, QShortcut, QKeySequence, QPushButton, QWidget, QIcon
+
+# HCI
+from lazyflow.utility import traceLogged
+from volumina.api import LazyflowSource, AlphaModulatedLayer
+from volumina.utility import ShortcutManager
+
+# ilastik
+from ilastik.utility import bind
+from ilastik.utility.gui import threadRouted
+from ilastik.shell.gui.iconMgr import ilastikIcons
+from ilastik.applets.labeling.labelingGui import LabelingGui, Tool
+from ilastik.applets.base.applet import ShellRequest, ControlCommand
+
+try:
+    from volumina.view3d.volumeRendering import RenderingManager
+except:
+    pass
+
+# Loggers
 logger = logging.getLogger(__name__)
 traceLogger = logging.getLogger('TRACE.' + __name__)
-from lazyflow.utility import Tracer
-
-from ilastik.utility import bind
 
 class GraphCutsGui(LabelingGui):
     """
@@ -24,11 +42,14 @@ class GraphCutsGui(LabelingGui):
     def appletDrawer(self):
         return self.getAppletDrawerUi()
 
-    # (Other methods already provided by our base class)
+    def viewerControlWidget(self):
+        return self._viewerControlUi
+
 
     ###########################################
     ###########################################
     
+    @traceLogged(traceLogger)
     def __init__(self, topLevelOperatorView):
         """
         """
@@ -44,7 +65,7 @@ class GraphCutsGui(LabelingGui):
         labelSlots.labelDelete = topLevelOperatorView.opLabelPipeline.opLabelArray.deleteLabel
 
         # Base class init
-        super(PixelClassificationGui, self).__init__( labelSlots, topLevelOperatorView, labelingDrawerUiPath )
+        super(GraphCutsGui, self).__init__( labelSlots, topLevelOperatorView, labelingDrawerUiPath )
         
         self.topLevelOperatorView = topLevelOperatorView
         self.interactiveModeActive = False
@@ -100,6 +121,62 @@ class GraphCutsGui(LabelingGui):
             self.topLevelOperatorView.MaxValue.notifyDirty( bind(updateDrawerFromOperator) )
             updateDrawerFromOperator()
             
+
+    @traceLogged(traceLogger)
+    def initViewerControlUi(self):
+        localDir = os.path.split(__file__)[0]
+        self._viewerControlUi = uic.loadUi( os.path.join( localDir, "viewerControls.ui" ) )
+
+        # Connect checkboxes
+        def nextCheckState(checkbox):
+            checkbox.setChecked( not checkbox.isChecked() )
+        self._viewerControlUi.checkShowPredictions.nextCheckState = partial(nextCheckState, self._viewerControlUi.checkShowPredictions)
+        self._viewerControlUi.checkShowSegmentation.nextCheckState = partial(nextCheckState, self._viewerControlUi.checkShowSegmentation)
+
+        self._viewerControlUi.checkShowPredictions.clicked.connect( self.handleShowPredictionsClicked )
+        self._viewerControlUi.checkShowSegmentation.clicked.connect( self.handleShowSegmentationClicked )
+
+        # The editor's layerstack is in charge of which layer movement buttons are enabled
+        model = self.editor.layerStack
+        self._viewerControlUi.viewerControls.setupConnections(model)
+       
+    def _initShortcuts(self):
+        mgr = ShortcutManager()
+        shortcutGroupName = "Predictions"
+
+        togglePredictions = QShortcut( QKeySequence("p"), self, member=self._viewerControlUi.checkShowPredictions.click )
+        mgr.register( shortcutGroupName,
+                      "Toggle Prediction Layer Visibility",
+                      togglePredictions,
+                      self._viewerControlUi.checkShowPredictions )
+
+        toggleSegmentation = QShortcut( QKeySequence("s"), self, member=self._viewerControlUi.checkShowSegmentation.click )
+        mgr.register( shortcutGroupName,
+                      "Toggle Segmentaton Layer Visibility",
+                      toggleSegmentation,
+                      self._viewerControlUi.checkShowSegmentation )
+
+        toggleLivePredict = QShortcut( QKeySequence("l"), self, member=self.labelingDrawerUi.liveUpdateButton.toggle )
+        mgr.register( shortcutGroupName,
+                      "Toggle Live Prediction Mode",
+                      toggleLivePredict,
+                      self.labelingDrawerUi.liveUpdateButton )
+
+    def _setup_contexts(self, layer):
+        def callback(pos, clayer=layer):
+            name = clayer.name
+            if name in self._renderedLayers:
+                label = self._renderedLayers.pop(name)
+                self._renderMgr.removeObject(label)
+                self._update_rendering()
+            else:
+                label = self._renderMgr.addObject()
+                self._renderedLayers[clayer.name] = label
+                self._update_rendering()
+
+        if self.render:
+            layer.contexts.append(('Toggle 3D rendering', callback))
+
     def handleThresholdGuiValuesChanged(self, minVal, maxVal):
         with Tracer(traceLogger):
             self.topLevelOperatorView.MinValue.setValue(minVal)
@@ -114,7 +191,7 @@ class GraphCutsGui(LabelingGui):
         This function creates a layer for each slot we want displayed in the volume editor.
         """
         # Base class provides the label layer.
-        layers = super(PixelClassificationGui, self).setupLayers()
+        layers = super(GraphCutsGui, self).setupLayers()
         labels = self.labelListData
 
         # Add each of the segmentations
@@ -209,3 +286,279 @@ class GraphCutsGui(LabelingGui):
         
         self.handleLabelSelectionChange()
         return layers
+
+    @traceLogged(traceLogger)
+    def toggleInteractive(self, checked):
+        """
+        If enable
+        """
+        logger.debug("toggling interactive mode to '%r'" % checked)
+
+        if checked==True:
+            if not self.topLevelOperatorView.FeatureImages.ready() \
+            or self.topLevelOperatorView.FeatureImages.meta.shape==None:
+                self.labelingDrawerUi.liveUpdateButton.setChecked(False)
+                mexBox=QMessageBox()
+                mexBox.setText("There are no features selected ")
+                mexBox.exec_()
+                return
+
+        self.labelingDrawerUi.savePredictionsButton.setEnabled(not checked)
+        self.topLevelOperatorView.FreezePredictions.setValue( not checked )
+
+        # Auto-set the "show predictions" state according to what the user just clicked.
+        if checked:
+            self._viewerControlUi.checkShowPredictions.setChecked( True )
+            self.handleShowPredictionsClicked()
+
+        # If we're changing modes, enable/disable our controls and other applets accordingly
+        if self.interactiveModeActive != checked:
+            if checked:
+                self.labelingDrawerUi.labelListView.allowDelete = False
+                self.labelingDrawerUi.AddLabelButton.setEnabled( False )
+            else:
+                self.labelingDrawerUi.labelListView.allowDelete = True
+                self.labelingDrawerUi.AddLabelButton.setEnabled( True )
+        self.interactiveModeActive = checked
+
+    @pyqtSlot()
+    @traceLogged(traceLogger)
+    def handleShowPredictionsClicked(self):
+        checked = self._viewerControlUi.checkShowPredictions.isChecked()
+        for layer in self.layerstack:
+            if "Prediction" in layer.name:
+                layer.visible = checked
+
+    @pyqtSlot()
+    @traceLogged(traceLogger)
+    def handleShowSegmentationClicked(self):
+        checked = self._viewerControlUi.checkShowSegmentation.isChecked()
+        for layer in self.layerstack:
+            if "Segmentation" in layer.name:
+                layer.visible = checked
+
+    @pyqtSlot()
+    @traceLogged(traceLogger)
+    def updateShowPredictionCheckbox(self):
+        predictLayerCount = 0
+        visibleCount = 0
+        for layer in self.layerstack:
+            if "Prediction" in layer.name:
+                predictLayerCount += 1
+                if layer.visible:
+                    visibleCount += 1
+
+        if visibleCount == 0:
+            self._viewerControlUi.checkShowPredictions.setCheckState(Qt.Unchecked)
+        elif predictLayerCount == visibleCount:
+            self._viewerControlUi.checkShowPredictions.setCheckState(Qt.Checked)
+        else:
+            self._viewerControlUi.checkShowPredictions.setCheckState(Qt.PartiallyChecked)
+
+    @pyqtSlot()
+    @traceLogged(traceLogger)
+    def updateShowSegmentationCheckbox(self):
+        segLayerCount = 0
+        visibleCount = 0
+        for layer in self.layerstack:
+            if "Segmentation" in layer.name:
+                segLayerCount += 1
+                if layer.visible:
+                    visibleCount += 1
+
+        if visibleCount == 0:
+            self._viewerControlUi.checkShowSegmentation.setCheckState(Qt.Unchecked)
+        elif segLayerCount == visibleCount:
+            self._viewerControlUi.checkShowSegmentation.setCheckState(Qt.Checked)
+        else:
+            self._viewerControlUi.checkShowSegmentation.setCheckState(Qt.PartiallyChecked)
+
+    @pyqtSlot()
+    @threadRouted
+    @traceLogged(traceLogger)
+    def handleLabelSelectionChange(self):
+        enabled = False
+        if self.topLevelOperatorView.MaxLabelValue.ready():
+            enabled = True
+            enabled &= self.topLevelOperatorView.MaxLabelValue.value >= 2
+            enabled &= numpy.all(numpy.asarray(self.topLevelOperatorView.CachedFeatureImages.meta.shape) > 0)
+            # FIXME: also check that each label has scribbles?
+        
+        self.labelingDrawerUi.savePredictionsButton.setEnabled(enabled)
+        self.labelingDrawerUi.liveUpdateButton.setEnabled(enabled)
+        self._viewerControlUi.checkShowPredictions.setEnabled(enabled)
+        self._viewerControlUi.checkShowSegmentation.setEnabled(enabled)
+
+    @pyqtSlot()
+    @traceLogged(traceLogger)
+    def onSavePredictionsButtonClicked(self):
+        """
+        The user clicked "Train and Predict".
+        Handle this event by asking the topLevelOperatorView for a prediction over the entire output region.
+        """
+        # The button does double-duty as a cancel button while predictions are being stored
+        if self._currentlySavingPredictions:
+            self.predictionSerializer.cancel()
+        else:
+            # Compute new predictions as needed
+            predictionsFrozen = self.topLevelOperatorView.FreezePredictions.value
+            self.topLevelOperatorView.FreezePredictions.setValue(False)
+            self._currentlySavingPredictions = True
+
+            originalButtonText = "Full Volume Predict and Save"
+            self.labelingDrawerUi.savePredictionsButton.setText("Cancel Full Predict")
+            
+            # Make sure the user can't paint anything while the computation is in progress.
+            self._changeInteractionMode(Tool.Navigation)
+
+            @traceLogged(traceLogger)
+            def saveThreadFunc():
+                logger.info("Starting full volume save...")
+                # Disable all other applets
+                self.guiControlSignal.emit( ControlCommand.DisableUpstream )
+                self.guiControlSignal.emit( ControlCommand.DisableDownstream )
+
+                def disableAllInWidgetButName(widget, exceptName):
+                    for child in widget.children():
+                        if child.findChild( QPushButton, exceptName) is None:
+                            child.setEnabled(False)
+                        else:
+                            disableAllInWidgetButName(child, exceptName)
+
+                # Disable everything in our drawer *except* the cancel button
+                disableAllInWidgetButName(self.labelingDrawerUi, "savePredictionsButton")
+
+                # But allow the user to cancel the save
+                self.labelingDrawerUi.savePredictionsButton.setEnabled(True)
+
+                # First, do a regular save.
+                # During a regular save, predictions are not saved to the project file.
+                # (It takes too much time if the user only needs the classifier.)
+                self.shellRequestSignal.emit( ShellRequest.RequestSave )
+
+                # Enable prediction storage and ask the shell to save the project again.
+                # (This way the second save will occupy the whole progress bar.)
+                self.predictionSerializer.predictionStorageEnabled = True
+                self.shellRequestSignal.emit( ShellRequest.RequestSave )
+                self.predictionSerializer.predictionStorageEnabled = False
+
+                # Restore original states (must use events for UI calls)
+                self.thunkEventHandler.post(self.labelingDrawerUi.savePredictionsButton.setText, originalButtonText)
+                self.topLevelOperatorView.FreezePredictions.setValue(predictionsFrozen)
+                self._currentlySavingPredictions = False
+
+                # Re-enable our controls
+                def enableAll(widget):
+                    for child in widget.children():
+                        if isinstance( child, QWidget ):
+                            child.setEnabled(True)
+                            enableAll(child)
+                enableAll(self.labelingDrawerUi)
+
+                # Re-enable all other applets
+                self.guiControlSignal.emit( ControlCommand.Pop )
+                self.guiControlSignal.emit( ControlCommand.Pop )
+                logger.info("Finished full volume save.")
+
+            saveThread = threading.Thread(target=saveThreadFunc)
+            saveThread.start()
+
+    def _getNext(self, slot, parentFun, transform=None):
+        numLabels = self.labelListData.rowCount()
+        value = slot.value
+        if numLabels < len(value):
+            result = value[numLabels]
+            if transform is not None:
+                result = transform(result)
+            return result
+        else:
+            return parentFun()
+
+    def _onLabelChanged(self, parentFun, mapf, slot):
+        parentFun()
+        new = map(mapf, self.labelListData)
+        old = slot.value
+        slot.setValue(_listReplace(old, new))
+
+    def _onLabelRemoved(self, parent, start, end):
+        super(GraphCutsGui, self)._onLabelRemoved(parent, start, end)
+        op = self.topLevelOperatorView
+        for slot in (op.LabelNames, op.LabelColors, op.PmapColors):
+            value = slot.value
+            value.pop(start)
+            slot.setValue(value)
+
+    def getNextLabelName(self):
+        return self._getNext(self.topLevelOperatorView.LabelNames,
+                             super(GraphCutsGui, self).getNextLabelName)
+
+    def getNextLabelColor(self):
+        return self._getNext(
+            self.topLevelOperatorView.LabelColors,
+            super(GraphCutsGui, self).getNextLabelColor,
+            lambda x: QColor(*x)
+        )
+
+    def getNextPmapColor(self):
+        return self._getNext(
+            self.topLevelOperatorView.PmapColors,
+            super(GraphCutsGui, self).getNextPmapColor,
+            lambda x: QColor(*x)
+        )
+
+    def onLabelNameChanged(self):
+        self._onLabelChanged(super(GraphCutsGui, self).onLabelNameChanged,
+                             lambda l: l.name,
+                             self.topLevelOperatorView.LabelNames)
+
+    def onLabelColorChanged(self):
+        self._onLabelChanged(super(GraphCutsGui, self).onLabelColorChanged,
+                             lambda l: (l.brushColor().red(),
+                                        l.brushColor().green(),
+                                        l.brushColor().blue()),
+                             self.topLevelOperatorView.LabelColors)
+
+
+    def onPmapColorChanged(self):
+        self._onLabelChanged(super(GraphCutsGui, self).onPmapColorChanged,
+                             lambda l: (l.pmapColor().red(),
+                                        l.pmapColor().green(),
+                                        l.pmapColor().blue()),
+                             self.topLevelOperatorView.PmapColors)
+
+    def _update_rendering(self):
+        if not self.render:
+            return
+        shape = self.topLevelOperatorView.InputImages.meta.shape[1:4]
+        time = self.editor.posModel.slicingPos5D[0]
+        if not self._renderMgr.ready:
+            self._renderMgr.setup(shape)
+
+        layernames = set(layer.name for layer in self.layerstack)
+        self._renderedLayers = dict((k, v) for k, v in self._renderedLayers.iteritems()
+                                if k in layernames)
+
+        newvolume = numpy.zeros(shape, dtype=numpy.uint8)
+        for layer in self.layerstack:
+            try:
+                label = self._renderedLayers[layer.name]
+            except KeyError:
+                continue
+            for ds in layer.datasources:
+                vol = ds.dataSlot.value[time, ..., 0]
+                indices = numpy.where(vol != 0)
+                newvolume[indices] = label
+
+        self._renderMgr.volume = newvolume
+        self._update_colors()
+        self._renderMgr.update()
+
+    def _update_colors(self):
+        for layer in self.layerstack:
+            try:
+                label = self._renderedLayers[layer.name]
+            except KeyError:
+                continue
+            color = layer.tintColor
+            color = (color.red() / 255.0, color.green() / 255.0, color.blue() / 255.0)
+            self._renderMgr.setColor(label, color)

@@ -35,3 +35,7 @@ if ilastik.config.cfg.getboolean('ilastik', 'debug'):
     import examples.thresholdMasking
     import examples.deviationFromMean
     import examples.labeling
+    try:
+        import graphCuts
+    except ImportError as e:
+        logger.warn("Failed to import graph cuts workflow; check dependencies: " + str(e))
