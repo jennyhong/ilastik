@@ -352,9 +352,8 @@ class OpRegionFeatures3d(Operator):
 
                 pfeats[key] = value
         logger.debug("merged, returning")
-        # add features needed by downstream applets. these should be
-        # removed before classification.
-        #all_features[default_features_key] = extrafeats
+        pfeats["Coord<Minimum>"] = pfeats["Coord<Minimum>"].astype(np.uint32)
+        pfeats["Coord<Maximum>"] = pfeats["Coord<Maximum>"].astype(np.uint32)
         return all_features
 
     def propagateDirty(self, slot, subindex, roi):
@@ -678,11 +677,15 @@ class OpObjectExtraction(Operator):
 
     def _checkConstraints(self, *args):
         if self.RawImage.ready() and self.BinaryImage.ready():
-            if self.RawImage.meta.shape != self.BinaryImage.meta.shape:
-                raise DatasetConstraintError( 
-                    "Object Extraction",
-                    "Raw Image shape {} does not match Binary Image shape {}.".format(
-                        self.RawImage.meta.shape, self.BinaryImage.meta.shape ))
+            rawTaggedShape = self.RawImage.meta.getTaggedShape()
+            binTaggedShape = self.BinaryImage.meta.getTaggedShape()
+            rawTaggedShape['c'] = None
+            binTaggedShape['c'] = None
+            if dict(rawTaggedShape) != dict(binTaggedShape):
+                msg = "Raw data and other data must have equal dimensions (different channels are okay).\n"\
+                      "Your datasets have shapes: {} and {}".format( self.RawImage.meta.shape, self.BinaryImage.meta.shape )
+                raise DatasetConstraintError( "Layer Viewer", msg )
+            
 
     def setupOutputs(self):
         taggedShape = self.RawImage.meta.getTaggedShape()
